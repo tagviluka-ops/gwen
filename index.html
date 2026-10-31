@@ -8,7 +8,7 @@
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Plus+Jakarta+Sans:wght@400;600;700&family=Creepster&family=Special+Elite&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Plus+Jakarta+Sans:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
@@ -81,7 +81,7 @@
     /* Top Controls Bar */
     .top-controls {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
       margin-bottom: 2rem;
       background: rgba(15, 10, 14, 0.8);
@@ -109,19 +109,6 @@
     .control-btn:hover {
       background: var(--crimson);
       box-shadow: 0 0 15px var(--crimson-glow);
-    }
-
-    /* Audio Bar */
-    .audio-player {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .audio-player input[type="range"] {
-      accent-color: var(--crimson);
-      width: 80px;
-      cursor: pointer;
     }
 
     /* Header / Hero Section */
@@ -368,38 +355,6 @@
       align-items: center;
     }
 
-    /* Soundboard Section */
-    .soundboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1rem;
-    }
-
-    .sound-btn {
-      background: rgba(20, 12, 16, 0.8);
-      border: 1px solid var(--border-crimson);
-      padding: 1rem;
-      border-radius: 14px;
-      color: var(--text-main);
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.3s ease;
-    }
-
-    .sound-btn:hover {
-      background: var(--crimson-dark);
-      border-color: var(--crimson);
-      box-shadow: 0 0 15px var(--crimson-glow);
-    }
-
-    .sound-btn i {
-      font-size: 1.4rem;
-      color: var(--accent-rose);
-    }
-
     /* Interactive Quiz Section */
     .quiz-container {
       background: var(--card-bg);
@@ -553,7 +508,7 @@
 </head>
 <body>
 
-  <!-- Custom Particle Engine Canvas -->
+  <!-- Custom Particle Canvas -->
   <canvas id="particle-canvas"></canvas>
 
   <!-- CRT Analog Horror Effect Overlay -->
@@ -566,13 +521,6 @@
       <button class="control-btn" id="toggleCrtBtn">
         <i class="fa-solid fa-tv"></i> Analog Filter: ON
       </button>
-
-      <div class="audio-player">
-        <button class="control-btn" id="playAudioBtn">
-          <i class="fa-solid fa-music"></i> Ambient Atmosphere
-        </button>
-        <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.5">
-      </div>
     </div>
 
     <!-- Hero Header -->
@@ -582,7 +530,7 @@
       <p class="subtitle">Of Curiosities, Macabre Treasures & Cute Little Things</p>
       
       <div class="bio-text">
-        I put together this little cabinet of your favorite movies, cute creepy creatures, macabre passions, and inside jokes. Take your time flipping cards, collecting specimens, playing around with the audio soundboard, and testing out the horror quiz!
+        I put together this little cabinet of your favorite movies, cute creepy creatures, macabre passions, and inside jokes. Take your time flipping cards, collecting specimens, and testing out the horror quiz!
       </div>
 
       <div class="hero-icons">
@@ -776,35 +724,7 @@
       </div>
     </div>
 
-    <!-- Section 3: Soundboard & Quotes -->
-    <h2 class="section-title"><i class="fa-solid fa-wave-square"></i> Audio Vault & Soundboard</h2>
-    <div class="soundboard-grid">
-      <button class="sound-btn" onclick="playSoundQuote('saw')">
-        <i class="fa-solid fa-puzzle-piece"></i>
-        <strong>Jigsaw Quote</strong>
-        <span style="font-size: 0.75rem; color: var(--text-muted);">"I want to play a game"</span>
-      </button>
-
-      <button class="sound-btn" onclick="playSoundQuote('fnaf')">
-        <i class="fa-solid fa-robot"></i>
-        <strong>FNAF Camera</strong>
-        <span style="font-size: 0.75rem; color: var(--text-muted);">Freddy's Corridor</span>
-      </button>
-
-      <button class="sound-btn" onclick="playSoundQuote('dexter')">
-        <i class="fa-solid fa-droplet"></i>
-        <strong>Dexter Theme</strong>
-        <span style="font-size: 0.75rem; color: var(--text-muted);">Morning Routine Cue</span>
-      </button>
-
-      <button class="sound-btn" onclick="playSoundQuote('static')">
-        <i class="fa-solid fa-tv"></i>
-        <strong>Analog Static</strong>
-        <span style="font-size: 0.75rem; color: var(--text-muted);">Liminal Audio Shift</span>
-      </button>
-    </div>
-
-    <!-- Section 4: Indie Horror Games Shrine -->
+    <!-- Section 3: Indie Horror Games Shrine -->
     <h2 class="section-title"><i class="fa-solid fa-gamepad"></i> Indie Horror Game Shrine</h2>
     <div class="grid-2">
       <div class="game-box">
@@ -821,7 +741,7 @@
       </div>
     </div>
 
-    <!-- Section 5: The Ultimate Horror & Oddities Quiz -->
+    <!-- Section 4: The Ultimate Horror & Oddities Quiz -->
     <h2 class="section-title"><i class="fa-solid fa-circle-question"></i> Gwen's Oddities Quiz</h2>
     <div class="quiz-container">
       <div class="quiz-question" id="quizQuestion">Which of these cute creatures are strictly NOT allowed in your room?</div>
@@ -859,7 +779,7 @@
 
   <script>
     /* -------------------------------------------------------------
-       1. Custom Particle Canvas (Roses, Bats, Bones, Moths)
+       1. Custom Canvas Floating Shapes (Rose, Bat, Bone, Moth)
     ------------------------------------------------------------- */
     const canvas = document.getElementById('particle-canvas');
     const ctx = canvas.getContext('2d');
@@ -871,29 +791,29 @@
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    const particleTypes = ['rose', 'bat', 'bone', 'moth'];
     const particles = [];
+    const types = ['rose', 'bat', 'bone', 'moth'];
 
-    class CustomParticle {
+    class VectorParticle {
       constructor() {
         this.reset();
       }
 
       reset() {
         this.x = Math.random() * canvas.width;
-        this.y = canvas.height + 20;
-        this.size = Math.random() * 14 + 10;
-        this.speedY = Math.random() * 1.2 + 0.4;
-        this.speedX = Math.sin(Math.random() * Math.PI) * 0.8;
-        this.type = particleTypes[Math.floor(Math.random() * particleTypes.length)];
-        this.opacity = Math.random() * 0.5 + 0.3;
-        this.rotation = Math.random() * 360;
-        this.rotSpeed = (Math.random() - 0.5) * 1.5;
+        this.y = canvas.height + 30;
+        this.size = Math.random() * 12 + 10;
+        this.speedY = Math.random() * 1.0 + 0.3;
+        this.speedX = Math.sin(Math.random() * Math.PI) * 0.5;
+        this.type = types[Math.floor(Math.random() * types.length)];
+        this.opacity = Math.random() * 0.45 + 0.25;
+        this.rotation = Math.random() * Math.PI * 2;
+        this.rotSpeed = (Math.random() - 0.5) * 0.02;
       }
 
       update() {
         this.y -= this.speedY;
-        this.x += Math.sin(this.y * 0.01) * 0.6 + this.speedX;
+        this.x += Math.sin(this.y * 0.008) * 0.7 + this.speedX;
         this.rotation += this.rotSpeed;
 
         if (this.y < -30) {
@@ -904,24 +824,60 @@
       draw() {
         ctx.save();
         ctx.translate(this.x, this.y);
-        ctx.rotate((this.rotation * Math.PI) / 180);
+        ctx.rotate(this.rotation);
         ctx.globalAlpha = this.opacity;
         ctx.fillStyle = '#d71921';
-        ctx.font = `${this.size}px "Font Awesome 6 Free", sans-serif`;
-        ctx.fontWeight = '900';
+        ctx.strokeStyle = '#d71921';
+        ctx.lineWidth = 1.5;
 
-        let icon = '\uf4d8'; // default rose
-        if (this.type === 'bat') icon = '\uf6b5';
-        else if (this.type === 'bone') icon = '\uf5d7';
-        else if (this.type === 'moth') icon = '\uf346';
+        const s = this.size;
 
-        ctx.fillText(icon, 0, 0);
+        if (this.type === 'rose') {
+          // Draw Rose Petal Silhouette
+          ctx.beginPath();
+          ctx.arc(0, 0, s * 0.4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(s * 0.2, -s * 0.1, s * 0.3, 0, Math.PI * 2);
+          ctx.stroke();
+        } else if (this.type === 'bat') {
+          // Draw Bat Wings Silhouette
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.quadraticCurveTo(-s * 0.6, -s * 0.6, -s, 0);
+          ctx.quadraticCurveTo(-s * 0.5, s * 0.4, 0, s * 0.2);
+          ctx.quadraticCurveTo(s * 0.5, s * 0.4, s, 0);
+          ctx.quadraticCurveTo(s * 0.6, -s * 0.6, 0, 0);
+          ctx.fill();
+        } else if (this.type === 'bone') {
+          // Draw Bone Silhouette
+          ctx.beginPath();
+          ctx.roundRect(-s * 0.6, -s * 0.15, s * 1.2, s * 0.3, 4);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(-s * 0.6, -s * 0.2, s * 0.2, 0, Math.PI * 2);
+          ctx.arc(-s * 0.6, s * 0.2, s * 0.2, 0, Math.PI * 2);
+          ctx.arc(s * 0.6, -s * 0.2, s * 0.2, 0, Math.PI * 2);
+          ctx.arc(s * 0.6, s * 0.2, s * 0.2, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (this.type === 'moth') {
+          // Draw Moth Silhouette
+          ctx.beginPath();
+          ctx.ellipse(-s * 0.4, 0, s * 0.4, s * 0.25, Math.PI / 4, 0, Math.PI * 2);
+          ctx.ellipse(s * 0.4, 0, s * 0.4, s * 0.25, -Math.PI / 4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.ellipse(0, 0, s * 0.15, s * 0.4, 0, 0, Math.PI * 2);
+          ctx.fillStyle = '#ff4d6d';
+          ctx.fill();
+        }
+
         ctx.restore();
       }
     }
 
-    for (let i = 0; i < 35; i++) {
-      particles.push(new CustomParticle());
+    for (let i = 0; i < 30; i++) {
+      particles.push(new VectorParticle());
     }
 
     function animateParticles() {
@@ -953,67 +909,7 @@
     });
 
     /* -------------------------------------------------------------
-       3. Ambient Sound Toggle (Web Audio Synthesizer Atmosphere)
-    ------------------------------------------------------------- */
-    let audioCtx = null;
-    let isPlaying = false;
-    let masterGain = null;
-
-    const playAudioBtn = document.getElementById('playAudioBtn');
-    const volumeSlider = document.getElementById('volumeSlider');
-
-    playAudioBtn.addEventListener('click', () => {
-      if (!audioCtx) {
-        initAudio();
-      }
-      if (!isPlaying) {
-        audioCtx.resume();
-        masterGain.gain.setTargetAtTime(volumeSlider.value * 0.15, audioCtx.currentTime, 0.1);
-        isPlaying = true;
-        playAudioBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Pause Drone';
-      } else {
-        masterGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
-        isPlaying = false;
-        playAudioBtn.innerHTML = '<i class="fa-solid fa-music"></i> Ambient Atmosphere';
-      }
-    });
-
-    volumeSlider.addEventListener('input', (e) => {
-      if (masterGain && isPlaying) {
-        masterGain.gain.setTargetAtTime(e.target.value * 0.15, audioCtx.currentTime, 0.05);
-      }
-    });
-
-    function initAudio() {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      masterGain = audioCtx.createGain();
-      masterGain.connect(audioCtx.destination);
-      masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
-
-      // Low frequency ambient drone
-      const osc1 = audioCtx.createOscillator();
-      const osc2 = audioCtx.createOscillator();
-      
-      osc1.type = 'sawtooth';
-      osc1.frequency.setValueAtTime(55, audioCtx.currentTime); // A1 note
-      
-      osc2.type = 'sine';
-      osc2.frequency.setValueAtTime(110, audioCtx.currentTime); // A2 note
-
-      const filter = audioCtx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(220, audioCtx.currentTime);
-
-      osc1.connect(filter);
-      osc2.connect(filter);
-      filter.connect(masterGain);
-
-      osc1.start();
-      osc2.start();
-    }
-
-    /* -------------------------------------------------------------
-       4. Specimen Collector Game
+       3. Specimen Collector Game
     ------------------------------------------------------------- */
     let specimenScore = 0;
     const countEl = document.getElementById('specimenCount');
@@ -1029,58 +925,7 @@
     }
 
     /* -------------------------------------------------------------
-       5. Soundboard Synthesized Audio Effects
-    ------------------------------------------------------------- */
-    function playSoundQuote(type) {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      if (type === 'saw') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(130, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 1.2);
-        gain.gain.setValueAtTime(0.3, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.2);
-        osc.start();
-        osc.stop(ctx.currentTime + 1.2);
-      } else if (type === 'fnaf') {
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(800, ctx.currentTime);
-        osc.frequency.setValueAtTime(200, ctx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.2, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.4);
-      } else if (type === 'dexter') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(440, ctx.currentTime);
-        osc.frequency.setValueAtTime(554.37, ctx.currentTime + 0.2);
-        gain.gain.setValueAtTime(0.2, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.6);
-      } else if (type === 'static') {
-        // Noise buffer for analog static
-        const bufferSize = ctx.sampleRate * 0.5;
-        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = Math.random() * 2 - 1;
-        }
-        const noise = ctx.createBufferSource();
-        noise.buffer = buffer;
-        noise.connect(gain);
-        gain.gain.setValueAtTime(0.15, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
-        noise.start();
-      }
-    }
-
-    /* -------------------------------------------------------------
-       6. Interactive Quiz
+       4. Interactive Quiz
     ------------------------------------------------------------- */
     function answerQuiz(index) {
       const result = document.getElementById('quizResult');
@@ -1093,7 +938,7 @@
     }
 
     /* -------------------------------------------------------------
-       7. Anti-Yuri Modal Functions
+       5. Anti-Yuri Modal Functions
     ------------------------------------------------------------- */
     function openModal() {
       document.getElementById('yuriModal').classList.add('active');
