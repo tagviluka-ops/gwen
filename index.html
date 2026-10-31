@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Gwen's Crimson Cabinet of Curiosities</title>
   
   <!-- Fonts & Icons -->
@@ -14,7 +14,7 @@
   <style>
     :root {
       --bg-color: #08080a;
-      --card-bg: rgba(18, 12, 16, 0.75);
+      --card-bg: rgba(18, 12, 16, 0.85);
       --crimson: #d71921;
       --crimson-glow: rgba(215, 25, 33, 0.4);
       --crimson-dark: #6e0007;
@@ -24,10 +24,14 @@
       --border-crimson: rgba(215, 25, 33, 0.35);
     }
 
+    /* Prevent mobile tap highlights & weird selections */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      user-select: none;
     }
 
     body {
@@ -39,7 +43,7 @@
       position: relative;
     }
 
-    /* Background Canvas for Custom Particles */
+    /* Canvas for Particles */
     #particle-canvas {
       position: fixed;
       top: 0;
@@ -71,22 +75,22 @@
 
     /* Container */
     .container {
-      max-width: 1200px;
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 2rem 1.5rem 6rem;
+      padding: 1.5rem 1rem 5rem;
       position: relative;
       z-index: 2;
     }
 
-    /* Top Controls Bar */
+    /* Controls Bar */
     .top-controls {
       display: flex;
-      justify-content: flex-start;
+      justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
-      background: rgba(15, 10, 14, 0.8);
+      background: rgba(15, 10, 14, 0.85);
       border: 1px solid var(--border-crimson);
-      padding: 0.75rem 1.5rem;
+      padding: 0.75rem 1.25rem;
       border-radius: 50px;
       backdrop-filter: blur(10px);
     }
@@ -106,22 +110,21 @@
       transition: all 0.3s ease;
     }
 
-    .control-btn:hover {
-      background: var(--crimson);
-      box-shadow: 0 0 15px var(--crimson-glow);
+    .control-btn:active {
+      transform: scale(0.96);
     }
 
-    /* Header / Hero Section */
+    /* Header Section */
     .hero-card {
       background: var(--card-bg);
       border: 1px solid var(--border-crimson);
       border-radius: 24px;
-      padding: 3rem 2rem;
+      padding: 2.5rem 1.5rem;
       text-align: center;
       position: relative;
       backdrop-filter: blur(12px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(215, 25, 33, 0.05);
-      margin-bottom: 3rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      margin-bottom: 2.5rem;
     }
 
     .badge {
@@ -135,20 +138,21 @@
       font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
     }
 
     .main-title {
       font-family: 'Cinzel Decorative', serif;
-      font-size: clamp(2.2rem, 5vw, 4rem);
+      font-size: clamp(1.8rem, 5vw, 3.5rem);
       color: var(--crimson);
       text-shadow: 0 0 20px var(--crimson-glow);
       margin-bottom: 0.5rem;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
+      line-height: 1.2;
     }
 
     .subtitle {
-      font-size: 1.2rem;
+      font-size: 1.05rem;
       color: var(--text-muted);
       margin-bottom: 1.5rem;
       font-style: italic;
@@ -156,32 +160,33 @@
 
     .bio-text {
       max-width: 750px;
-      margin: 0 auto 2rem;
+      margin: 0 auto 1.5rem;
       line-height: 1.7;
-      font-size: 1.05rem;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 1.5rem;
+      font-size: 0.95rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 1.25rem;
       border-radius: 16px;
       border-left: 3px solid var(--crimson);
+      text-align: left;
     }
 
     .hero-icons {
       display: flex;
       justify-content: center;
       gap: 1.5rem;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       color: var(--crimson);
     }
 
     /* Section Styling */
     .section-title {
       font-family: 'Cinzel Decorative', serif;
-      font-size: 1.8rem;
+      font-size: 1.4rem;
       color: var(--text-main);
-      margin: 3rem 0 1.5rem;
+      margin: 2.5rem 0 1.25rem;
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.75rem;
     }
 
     .section-title::after {
@@ -191,25 +196,26 @@
       background: linear-gradient(90deg, var(--crimson), transparent);
     }
 
-    /* Grid Layouts */
+    /* Grids */
     .grid-4 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
     }
 
     .grid-2 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
     }
 
-    /* Flip Cards (DVD Shelf) */
+    /* Flip Cards (Mobile Centering Fixed) */
     .flip-card {
       background-color: transparent;
-      height: 340px;
+      height: 320px;
       perspective: 1000px;
       cursor: pointer;
+      width: 100%;
     }
 
     .flip-card-inner {
@@ -233,23 +239,24 @@
       backface-visibility: hidden;
       border-radius: 18px;
       border: 1px solid var(--border-crimson);
-      padding: 1.5rem;
+      padding: 1.25rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
       background: var(--card-bg);
       backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
 
     .card-back {
       transform: rotateY(180deg);
-      background: rgba(30, 8, 12, 0.95);
+      background: rgba(25, 6, 10, 0.95);
       border-color: var(--crimson);
       text-align: left;
       align-items: flex-start;
       justify-content: flex-start;
-      gap: 1rem;
+      gap: 0.75rem;
     }
 
     .card-tag {
@@ -262,26 +269,26 @@
     }
 
     .card-icon {
-      font-size: 3rem;
+      font-size: 2.8rem;
       color: var(--crimson);
-      margin: 1rem 0;
+      margin: 0.5rem 0;
     }
 
     .card-title {
       font-family: 'Cinzel Decorative', serif;
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       color: var(--text-main);
       letter-spacing: 1px;
       font-weight: 700;
     }
 
     .card-desc {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
     }
 
     .card-flip-prompt {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--crimson);
       display: flex;
       align-items: center;
@@ -291,56 +298,90 @@
     .card-back h4 {
       color: var(--accent-rose);
       font-family: 'Cinzel Decorative', serif;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
     }
 
     .card-back p {
-      font-size: 0.95rem;
-      line-height: 1.6;
+      font-size: 0.9rem;
+      line-height: 1.5;
       color: var(--text-main);
+      user-select: text;
     }
 
-    /* Specimen Vault & Anatomy Collector Game */
+    /* Secret Envelope Box */
+    .envelope-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-crimson);
+      border-radius: 20px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      margin-bottom: 2rem;
+    }
+
+    .envelope-icon {
+      font-size: 3rem;
+      color: var(--crimson);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .envelope-icon:hover {
+      transform: scale(1.1) rotate(-5deg);
+    }
+
+    .secret-message-box {
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      background: rgba(30, 8, 12, 0.9);
+      border: 1px dashed var(--crimson);
+      border-radius: 14px;
+      display: none;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      text-align: left;
+    }
+
+    /* Specimen Vault Game */
     .game-box {
       background: var(--card-bg);
       border: 1px solid var(--border-crimson);
       border-radius: 20px;
-      padding: 2rem;
+      padding: 1.5rem;
       backdrop-filter: blur(10px);
     }
 
     .collector-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 1rem;
-      margin: 1.5rem 0;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.75rem;
+      margin: 1.25rem 0;
     }
 
     .specimen-item {
       background: rgba(0, 0, 0, 0.4);
       border: 1px dashed var(--border-crimson);
       border-radius: 12px;
-      padding: 1.2rem;
+      padding: 1rem 0.5rem;
       text-align: center;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.25s ease;
     }
 
-    .specimen-item:hover {
-      border-color: var(--crimson);
-      background: rgba(215, 25, 33, 0.1);
-      transform: translateY(-3px);
+    .specimen-item:active {
+      transform: scale(0.95);
+      background: rgba(215, 25, 33, 0.2);
     }
 
     .specimen-item i {
-      font-size: 2rem;
+      font-size: 1.8rem;
       color: var(--crimson);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
       display: block;
     }
 
     .specimen-item span {
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       display: block;
       color: var(--text-muted);
     }
@@ -348,84 +389,109 @@
     .specimen-score {
       font-family: 'Special Elite', cursive;
       color: var(--accent-rose);
-      font-size: 1.2rem;
+      font-size: 1.05rem;
       margin-top: 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
 
-    /* Interactive Quiz Section */
+    /* Morbid Fact Generator */
+    .fact-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border-crimson);
+      border-radius: 20px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      text-align: center;
+    }
+
+    .fact-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin: 1rem 0;
+      color: var(--text-main);
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: text;
+    }
+
+    /* Quiz Section */
     .quiz-container {
       background: var(--card-bg);
       border: 1px solid var(--border-crimson);
       border-radius: 20px;
-      padding: 2rem;
+      padding: 1.5rem;
       backdrop-filter: blur(10px);
     }
 
     .quiz-question {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
       color: var(--text-main);
     }
 
     .quiz-options {
       display: grid;
-      gap: 0.75rem;
+      gap: 0.6rem;
     }
 
     .quiz-option {
       background: rgba(0, 0, 0, 0.4);
       border: 1px solid var(--border-crimson);
-      padding: 1rem 1.2rem;
+      padding: 0.85rem 1rem;
       border-radius: 12px;
       cursor: pointer;
       transition: all 0.25s ease;
       text-align: left;
       color: var(--text-main);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
 
-    .quiz-option:hover {
-      background: rgba(215, 25, 33, 0.2);
-      border-color: var(--crimson);
+    .quiz-option:active {
+      background: rgba(215, 25, 33, 0.25);
     }
 
     .quiz-result {
-      margin-top: 1.5rem;
-      padding: 1rem;
+      margin-top: 1.25rem;
+      padding: 0.85rem;
       border-radius: 12px;
       background: rgba(215, 25, 33, 0.15);
       border: 1px solid var(--crimson);
       display: none;
       color: var(--accent-rose);
       font-weight: 600;
+      font-size: 0.9rem;
     }
 
     /* Anti-Yuri Easter Egg Banner */
     .yuri-warning-box {
-      margin-top: 3rem;
+      margin-top: 2.5rem;
       background: linear-gradient(135deg, rgba(40, 5, 10, 0.9), rgba(15, 0, 5, 0.9));
       border: 2px dashed var(--crimson);
       border-radius: 20px;
-      padding: 1.5rem 2rem;
+      padding: 1.25rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 1.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
 
     .yuri-warning-text h4 {
       font-family: 'Cinzel Decorative', serif;
       color: var(--crimson);
-      font-size: 1.2rem;
-      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      margin-bottom: 0.2rem;
     }
 
     .yuri-warning-text p {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
     }
 
@@ -433,21 +499,21 @@
       background: var(--crimson);
       color: #fff;
       border: none;
-      padding: 0.75rem 1.5rem;
+      padding: 0.65rem 1.25rem;
       border-radius: 30px;
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
       transition: all 0.3s ease;
+      font-size: 0.85rem;
       box-shadow: 0 0 15px var(--crimson-glow);
     }
 
-    .ban-btn:hover {
-      transform: scale(1.05);
-      background: #ff1e27;
+    .ban-btn:active {
+      transform: scale(0.95);
     }
 
-    /* Modal Popup for Ban Effect */
+    /* Modal Popup */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -462,6 +528,7 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
+      padding: 1rem;
     }
 
     .modal-overlay.active {
@@ -472,33 +539,33 @@
     .modal-content {
       background: var(--card-bg);
       border: 2px solid var(--crimson);
-      padding: 2.5rem;
+      padding: 2rem 1.5rem;
       border-radius: 20px;
       text-align: center;
-      max-width: 450px;
+      max-width: 420px;
       box-shadow: 0 0 40px var(--crimson-glow);
     }
 
     .modal-content h3 {
       font-family: 'Cinzel Decorative', serif;
       color: var(--crimson);
-      font-size: 1.6rem;
-      margin-bottom: 1rem;
+      font-size: 1.4rem;
+      margin-bottom: 0.8rem;
     }
 
     .modal-content p {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
       line-height: 1.5;
+      font-size: 0.9rem;
     }
 
-    /* Footer */
     footer {
       text-align: center;
-      margin-top: 4rem;
-      padding-top: 2rem;
+      margin-top: 3.5rem;
+      padding-top: 1.5rem;
       border-top: 1px solid rgba(215, 25, 33, 0.2);
       color: var(--text-muted);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
     footer i {
@@ -508,7 +575,7 @@
 </head>
 <body>
 
-  <!-- Custom Particle Canvas -->
+  <!-- Floating Vector Particles Canvas -->
   <canvas id="particle-canvas"></canvas>
 
   <!-- CRT Analog Horror Effect Overlay -->
@@ -516,21 +583,25 @@
 
   <div class="container">
     
-    <!-- Top Navigation Controls -->
+    <!-- Top Controls Bar -->
     <div class="top-controls">
       <button class="control-btn" id="toggleCrtBtn">
         <i class="fa-solid fa-tv"></i> Analog Filter: ON
+      </button>
+
+      <button class="control-btn" onclick="triggerMusicBox()">
+        <i class="fa-solid fa-music"></i> Porcelain Chime
       </button>
     </div>
 
     <!-- Hero Header -->
     <header class="hero-card">
-      <span class="badge"><i class="fa-solid fa-rose"></i> Made For Gwen</span>
+      <span class="badge"><i class="fa-solid fa-rose"></i> Custom Built For Gwen</span>
       <h1 class="main-title">Gwen's Crimson Cabinet</h1>
       <p class="subtitle">Of Curiosities, Macabre Treasures & Cute Little Things</p>
       
       <div class="bio-text">
-        I put together this little cabinet of your favorite movies, cute creepy creatures, macabre passions, and inside jokes. Take your time flipping cards, collecting specimens, and testing out the horror quiz!
+        I put together this digital cabinet for all your favorite horror movies, cute creepy creatures, macabre passions, and inside jokes. Flip the cards, collect specimens, inspect porcelain oddities, and test out the quiz!
       </div>
 
       <div class="hero-icons">
@@ -540,6 +611,18 @@
         <i class="fa-solid fa-bat" title="Bats"></i>
       </div>
     </header>
+
+    <!-- Secret Envelope Message Section -->
+    <div class="envelope-card">
+      <i class="fa-solid fa-envelope-open-text envelope-icon" onclick="toggleSecretMessage()"></i>
+      <h3 style="font-family: 'Cinzel Decorative', serif; color: var(--crimson); margin-top: 0.5rem;">Sealed With A Rose Signature</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">Tap the envelope to unlock a quick note!</p>
+
+      <div class="secret-message-box" id="secretMsg">
+        <strong style="color: var(--accent-rose); display: block; margin-bottom: 0.5rem;">Hey Gwen! 🌹</strong>
+        Even though you love analog horror, blood aesthetics, taxidermy, and unsettling things, I still think you're the cutest girl ever. Hope you love your very own cabinet!
+      </div>
+    </div>
 
     <!-- Section 1: Digital DVD Shelf (Interactive 3D Flip Cards) -->
     <h2 class="section-title"><i class="fa-solid fa-compact-disc"></i> The Digital DVD Shelf</h2>
@@ -553,7 +636,7 @@
             <i class="fa-solid fa-tape card-icon"></i>
             <h3 class="card-title">Saw I & II</h3>
             <p class="card-desc">The awesome horror franchise on display</p>
-            <span class="card-flip-prompt"><i class="fa-solid fa-rotate"></i> Flip card</span>
+            <span class="card-flip-prompt"><i class="fa-solid fa-rotate"></i> Tap to flip card</span>
           </div>
           <div class="card-back">
             <h4>Saw & The Jigsaw Legacy</h4>
@@ -569,8 +652,8 @@
             <span class="card-tag">First Revival DVD</span>
             <i class="fa-solid fa-masks-theater card-icon"></i>
             <h3 class="card-title">Scream 4</h3>
-            <p class="card-desc">The movie that restarted the physical collection</p>
-            <span class="card-flip-prompt"><i class="fa-solid fa-rotate"></i> Flip card</span>
+            <p class="card-desc">The movie that restarted the collection</p>
+            <span class="card-flip-prompt"><i class="fa-solid fa-rotate"></i> Tap to flip card</span>
           </div>
           <div class="card-back">
             <h4>Ghostface Collection</h4>
@@ -587,7 +670,7 @@
             <i class="fa-solid fa-skull-crossbones card-icon"></i>
             <h3 class="card-title">Happy Tree Friends</h3>
             <p class="card-desc">Flaky, Flippy, Nutty, Cuddles & More</p>
-            <span class="card-flip-prompt"><i class="fa-solid fa-rotate"></i> Flip card</span>
+            <span class="card-flip-prompt"><i class="fa-solid fa-rotate"></i> Tap to flip card</span>
           </div>
           <div class="card-back">
             <h4>Cute Meets Chaos</h4>
@@ -604,7 +687,7 @@
             <i class="fa-solid fa-book-skull card-icon"></i>
             <h3 class="card-title">Death Note</h3>
             <p class="card-desc">+ Dokuro-chan & Chainsaw Man</p>
-            <span class="card-flip-prompt"><i class="fa-solid fa-rotate"></i> Flip card</span>
+            <span class="card-flip-prompt"><i class="fa-solid fa-rotate"></i> Tap to flip card</span>
           </div>
           <div class="card-back">
             <h4>Shinigami & Angels</h4>
@@ -621,7 +704,7 @@
             <i class="fa-solid fa-film card-icon"></i>
             <h3 class="card-title">Donnie Darko</h3>
             <p class="card-desc">Giant rabbits & time travel aesthetic</p>
-            <span class="card-flip-prompt"><i class="fa-solid fa-rotate"></i> Flip card</span>
+            <span class="card-flip-prompt"><i class="fa-solid fa-rotate"></i> Tap to flip card</span>
           </div>
           <div class="card-back">
             <h4>Movie Night Locked In</h4>
@@ -638,7 +721,7 @@
             <i class="fa-solid fa-syringe card-icon"></i>
             <h3 class="card-title">Dexter</h3>
             <p class="card-desc">Serial killers & crime lab forensics</p>
-            <span class="card-flip-prompt"><i class="fa-solid fa-rotate"></i> Flip card</span>
+            <span class="card-flip-prompt"><i class="fa-solid fa-rotate"></i> Tap to flip card</span>
           </div>
           <div class="card-back">
             <h4>Forensic Chemistry</h4>
@@ -655,7 +738,7 @@
             <i class="fa-solid fa-flask card-icon"></i>
             <h3 class="card-title">Rick & Morty</h3>
             <p class="card-desc">+ X-Men comics & Death Forest</p>
-            <span class="card-flip-prompt"><i class="fa-solid fa-rotate"></i> Flip card</span>
+            <span class="card-flip-prompt"><i class="fa-solid fa-rotate"></i> Tap to flip card</span>
           </div>
           <div class="card-back">
             <h4>Multiverse & Mutants</h4>
@@ -672,7 +755,7 @@
             <i class="fa-solid fa-hand-holding-medical card-icon"></i>
             <h3 class="card-title">The Rose</h3>
             <p class="card-desc">Drawn on every art piece & assignment</p>
-            <span class="card-flip-prompt"><i class="fa-solid fa-rotate"></i> Flip card</span>
+            <span class="card-flip-prompt"><i class="fa-solid fa-rotate"></i> Tap to flip card</span>
           </div>
           <div class="card-back">
             <h4>Your Personal Emblem</h4>
@@ -683,17 +766,17 @@
 
     </div>
 
-    <!-- Section 2: Interactive Anatomy Collector & Specimen Vault -->
+    <!-- Section 2: Interactive Anatomy Collector -->
     <h2 class="section-title"><i class="fa-solid fa-vial"></i> Specimen Collector & Anatomy Lab</h2>
     <div class="game-box">
-      <p style="color: var(--text-muted); font-size: 0.95rem;">
-        Click on specimens below to log them into your taxidermy cabinet and level up your mortician rank!
+      <p style="color: var(--text-muted); font-size: 0.85rem;">
+        Tap on specimens below to log them into your taxidermy cabinet and level up your rank!
       </p>
 
       <div class="collector-grid">
         <div class="specimen-item" onclick="collectSpecimen('Bone')">
           <i class="fa-solid fa-bone"></i>
-          <strong>Human Bone</strong>
+          <strong>Bone</strong>
           <span>+10 Osteology</span>
         </div>
         <div class="specimen-item" onclick="collectSpecimen('Moth')">
@@ -703,7 +786,7 @@
         </div>
         <div class="specimen-item" onclick="collectSpecimen('Bat')">
           <i class="fa-solid fa-bat"></i>
-          <strong>Vampire Bat</strong>
+          <strong>Bat</strong>
           <span>+10 Zoology</span>
         </div>
         <div class="specimen-item" onclick="collectSpecimen('Spider')">
@@ -719,29 +802,39 @@
       </div>
 
       <div class="specimen-score">
-        <span>Current Rank: <strong id="userRank" style="color: var(--crimson);">Novice Taxidermist</strong></span>
-        <span>Specimens Collected: <strong id="specimenCount" style="color: var(--accent-rose);">0</strong></span>
+        <span>Rank: <strong id="userRank" style="color: var(--crimson);">Novice Taxidermist</strong></span>
+        <span>Specimens: <strong id="specimenCount" style="color: var(--accent-rose);">0</strong></span>
       </div>
     </div>
 
-    <!-- Section 3: Indie Horror Games Shrine -->
+    <!-- Section 3: Daily Morbid & Oddity Fact Generator -->
+    <h2 class="section-title"><i class="fa-solid fa-skull"></i> Daily Morbid Fact Generator</h2>
+    <div class="fact-box">
+      <p style="color: var(--text-muted); font-size: 0.85rem;">Curious oddity trivia about taxidermy, forensic science, and nature:</p>
+      <div class="fact-text" id="factDisplay">"Human bones are constantly remodeling themselves, replacing full bone tissue roughly every 10 years!"</div>
+      <button class="control-btn" style="margin: 0 auto;" onclick="generateRandomFact()">
+        <i class="fa-solid fa-dice"></i> Generate New Oddity Fact
+      </button>
+    </div>
+
+    <!-- Section 4: Indie Horror Games Shrine -->
     <h2 class="section-title"><i class="fa-solid fa-gamepad"></i> Indie Horror Game Shrine</h2>
     <div class="grid-2">
       <div class="game-box">
-        <h3 style="font-family: 'Cinzel Decorative', serif; color: var(--crimson); margin-bottom: 0.5rem;">Sally Face & Fran Bow</h3>
-        <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-muted);">
+        <h3 style="font-family: 'Cinzel Decorative', serif; color: var(--crimson); margin-bottom: 0.4rem;">Sally Face & Fran Bow</h3>
+        <p style="font-size: 0.9font-size: 0.9rem; line-height: 1.5; color: var(--text-muted);">
           Dark storylines, eerie art styles, and psychological mystery. You haven't had the chance to play them all yet, but their atmospheric creepy vibe is 10/10.
         </p>
       </div>
       <div class="game-box">
-        <h3 style="font-family: 'Cinzel Decorative', serif; color: var(--crimson); margin-bottom: 0.5rem;">Five Nights at Freddy's</h3>
-        <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-muted);">
+        <h3 style="font-family: 'Cinzel Decorative', serif; color: var(--crimson); margin-bottom: 0.4rem;">Five Nights at Freddy's</h3>
+        <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-muted);">
           Classic animatronic analog horror. The lore, uncanny suits, and jumpscares make FNAF an absolute staple in horror gaming.
         </p>
       </div>
     </div>
 
-    <!-- Section 4: The Ultimate Horror & Oddities Quiz -->
+    <!-- Section 5: Quiz -->
     <h2 class="section-title"><i class="fa-solid fa-circle-question"></i> Gwen's Oddities Quiz</h2>
     <div class="quiz-container">
       <div class="quiz-question" id="quizQuestion">Which of these cute creatures are strictly NOT allowed in your room?</div>
@@ -757,7 +850,7 @@
     <div class="yuri-warning-box">
       <div class="yuri-warning-text">
         <h4><i class="fa-solid fa-triangle-exclamation"></i> Yuri (DDLC) Exclusion Protocol</h4>
-        <p>This website is an officially designated Yuri-Free Zone. Click to enforce the ban!</p>
+        <p>This website is an officially designated Yuri-Free Zone. Tap to enforce!</p>
       </div>
       <button class="ban-btn" onclick="openModal()">Enforce Ban</button>
     </div>
@@ -802,18 +895,18 @@
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = canvas.height + 30;
-        this.size = Math.random() * 12 + 10;
-        this.speedY = Math.random() * 1.0 + 0.3;
-        this.speedX = Math.sin(Math.random() * Math.PI) * 0.5;
+        this.size = Math.random() * 10 + 8;
+        this.speedY = Math.random() * 0.9 + 0.3;
+        this.speedX = Math.sin(Math.random() * Math.PI) * 0.4;
         this.type = types[Math.floor(Math.random() * types.length)];
-        this.opacity = Math.random() * 0.45 + 0.25;
+        this.opacity = Math.random() * 0.4 + 0.2;
         this.rotation = Math.random() * Math.PI * 2;
         this.rotSpeed = (Math.random() - 0.5) * 0.02;
       }
 
       update() {
         this.y -= this.speedY;
-        this.x += Math.sin(this.y * 0.008) * 0.7 + this.speedX;
+        this.x += Math.sin(this.y * 0.008) * 0.6 + this.speedX;
         this.rotation += this.rotSpeed;
 
         if (this.y < -30) {
@@ -833,7 +926,6 @@
         const s = this.size;
 
         if (this.type === 'rose') {
-          // Draw Rose Petal Silhouette
           ctx.beginPath();
           ctx.arc(0, 0, s * 0.4, 0, Math.PI * 2);
           ctx.fill();
@@ -841,7 +933,6 @@
           ctx.arc(s * 0.2, -s * 0.1, s * 0.3, 0, Math.PI * 2);
           ctx.stroke();
         } else if (this.type === 'bat') {
-          // Draw Bat Wings Silhouette
           ctx.beginPath();
           ctx.moveTo(0, 0);
           ctx.quadraticCurveTo(-s * 0.6, -s * 0.6, -s, 0);
@@ -850,25 +941,14 @@
           ctx.quadraticCurveTo(s * 0.6, -s * 0.6, 0, 0);
           ctx.fill();
         } else if (this.type === 'bone') {
-          // Draw Bone Silhouette
           ctx.beginPath();
-          ctx.roundRect(-s * 0.6, -s * 0.15, s * 1.2, s * 0.3, 4);
-          ctx.fill();
-          ctx.beginPath();
-          ctx.arc(-s * 0.6, -s * 0.2, s * 0.2, 0, Math.PI * 2);
-          ctx.arc(-s * 0.6, s * 0.2, s * 0.2, 0, Math.PI * 2);
-          ctx.arc(s * 0.6, -s * 0.2, s * 0.2, 0, Math.PI * 2);
-          ctx.arc(s * 0.6, s * 0.2, s * 0.2, 0, Math.PI * 2);
+          if (ctx.roundRect) ctx.roundRect(-s * 0.6, -s * 0.15, s * 1.2, s * 0.3, 3);
+          else ctx.rect(-s * 0.6, -s * 0.15, s * 1.2, s * 0.3);
           ctx.fill();
         } else if (this.type === 'moth') {
-          // Draw Moth Silhouette
           ctx.beginPath();
           ctx.ellipse(-s * 0.4, 0, s * 0.4, s * 0.25, Math.PI / 4, 0, Math.PI * 2);
           ctx.ellipse(s * 0.4, 0, s * 0.4, s * 0.25, -Math.PI / 4, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.beginPath();
-          ctx.ellipse(0, 0, s * 0.15, s * 0.4, 0, 0, Math.PI * 2);
-          ctx.fillStyle = '#ff4d6d';
           ctx.fill();
         }
 
@@ -876,7 +956,7 @@
       }
     }
 
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 25; i++) {
       particles.push(new VectorParticle());
     }
 
@@ -909,7 +989,19 @@
     });
 
     /* -------------------------------------------------------------
-       3. Specimen Collector Game
+       3. Secret Message Toggle
+    ------------------------------------------------------------- */
+    function toggleSecretMessage() {
+      const msg = document.getElementById('secretMsg');
+      if (msg.style.display === 'block') {
+        msg.style.display = 'none';
+      } else {
+        msg.style.display = 'block';
+      }
+    }
+
+    /* -------------------------------------------------------------
+       4. Specimen Collector Game
     ------------------------------------------------------------- */
     let specimenScore = 0;
     const countEl = document.getElementById('specimenCount');
@@ -925,7 +1017,45 @@
     }
 
     /* -------------------------------------------------------------
-       4. Interactive Quiz
+       5. Random Morbid Fact Generator
+    ------------------------------------------------------------- */
+    const facts = [
+      "Human bones are constantly remodeling themselves, replacing full bone tissue roughly every 10 years!",
+      "In Victorian times, taxidermy was so popular that people built entire miniature scenes with preserved frogs playing cricket!",
+      "Moths use the moon to navigate, which is why artificial lights confuse them into flying in continuous circles.",
+      "The word 'Morgue' originates from the French word 'morguer', which meant to look at or stare solemnly at something.",
+      "Spiders use hydraulic fluid pressure in their legs to move around rather than traditional extensor muscles!"
+    ];
+
+    function generateRandomFact() {
+      const display = document.getElementById('factDisplay');
+      const randomIdx = Math.floor(Math.random() * facts.length);
+      display.innerText = facts[randomIdx];
+    }
+
+    /* -------------------------------------------------------------
+       6. Porcelain Chime Sound Effect
+    ------------------------------------------------------------- */
+    function triggerMusicBox() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(659.25, ctx.currentTime); // E5 note
+      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.15); // A5 note
+
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+
+      osc.start();
+      osc.stop(ctx.currentTime + 1.2);
+    }
+
+    /* -------------------------------------------------------------
+       7. Interactive Quiz
     ------------------------------------------------------------- */
     function answerQuiz(index) {
       const result = document.getElementById('quizResult');
@@ -938,7 +1068,7 @@
     }
 
     /* -------------------------------------------------------------
-       5. Anti-Yuri Modal Functions
+       8. Anti-Yuri Modal Functions
     ------------------------------------------------------------- */
     function openModal() {
       document.getElementById('yuriModal').classList.add('active');
