@@ -24,7 +24,7 @@
       --border-crimson: rgba(215, 25, 33, 0.35);
     }
 
-    /* Prevent mobile tap highlights & weird selections */
+    /* Prevent mobile tap highlights & selection glitches */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -43,7 +43,7 @@
       position: relative;
     }
 
-    /* Canvas for Particles */
+    /* Floating Particles Canvas */
     #particle-canvas {
       position: fixed;
       top: 0;
@@ -52,6 +52,17 @@
       height: 100vh;
       pointer-events: none;
       z-index: 1;
+    }
+
+    /* Bat Swarm Transition Canvas (Swoop on Quiz Fail) */
+    #bat-swarm-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 200;
     }
 
     /* CRT Analog Horror Overlay */
@@ -114,7 +125,7 @@
       transform: scale(0.96);
     }
 
-    /* Header Section */
+    /* Hero Header */
     .hero-card {
       background: var(--card-bg);
       border: 1px solid var(--border-crimson);
@@ -209,7 +220,7 @@
       gap: 1.25rem;
     }
 
-    /* Flip Cards (Mobile Centering Fixed) */
+    /* Flip Cards */
     .flip-card {
       background-color: transparent;
       height: 320px;
@@ -308,7 +319,7 @@
       user-select: text;
     }
 
-    /* Secret Envelope Box */
+    /* Secret Envelope */
     .envelope-card {
       background: var(--card-bg);
       border: 1px solid var(--border-crimson);
@@ -324,10 +335,6 @@
       color: var(--crimson);
       cursor: pointer;
       transition: transform 0.3s ease;
-    }
-
-    .envelope-icon:hover {
-      transform: scale(1.1) rotate(-5deg);
     }
 
     .secret-message-box {
@@ -366,6 +373,10 @@
       text-align: center;
       cursor: pointer;
       transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     .specimen-item:active {
@@ -373,8 +384,11 @@
       background: rgba(215, 25, 33, 0.2);
     }
 
-    .specimen-item i {
+    .specimen-item i, .specimen-item svg {
       font-size: 1.8rem;
+      width: 2rem;
+      height: 2rem;
+      fill: var(--crimson);
       color: var(--crimson);
       margin-bottom: 0.4rem;
       display: block;
@@ -427,6 +441,17 @@
       border-radius: 20px;
       padding: 1.5rem;
       backdrop-filter: blur(10px);
+      position: relative;
+    }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-family: 'Cinzel Decorative', serif;
+      color: var(--accent-rose);
+      font-size: 0.95rem;
     }
 
     .quiz-question {
@@ -575,8 +600,11 @@
 </head>
 <body>
 
-  <!-- Floating Vector Particles Canvas -->
+  <!-- Floating Particles Canvas -->
   <canvas id="particle-canvas"></canvas>
+
+  <!-- Bat Swarm Transition Canvas -->
+  <canvas id="bat-swarm-canvas"></canvas>
 
   <!-- CRT Analog Horror Effect Overlay -->
   <div class="crt-overlay" id="crtOverlay"></div>
@@ -608,7 +636,7 @@
         <i class="fa-solid fa-spider" title="Spiders"></i>
         <i class="fa-solid fa-bone" title="Bones & Anatomy"></i>
         <i class="fa-solid fa-ghost" title="Paranormal"></i>
-        <i class="fa-solid fa-bat" title="Bats"></i>
+        <svg viewBox="0 0 24 24" style="width: 1.5rem; height: 1.5rem; fill: var(--crimson); vertical-align: middle;"><path d="M12,2 C10,4 8,4 6,5 C4,6 2,8 2,11 C2,14 4,16 7,16 C9,16 11,14 12,13 C13,14 15,16 17,16 C20,16 22,14 22,11 C22,8 20,6 18,5 C16,4 14,4 12,2 Z M8,8 C9,8 9.5,9 9.5,10 C9.5,11 9,11.5 8,11.5 C7,11.5 6.5,11 6.5,10 C6.5,9 7,8 8,8 Z M16,8 C17,8 17.5,9 17.5,10 C17.5,11 17,11.5 16,11.5 C15,11.5 14.5,11 14.5,10 C14.5,9 15,8 16,8 Z"/></svg>
       </div>
     </header>
 
@@ -784,11 +812,14 @@
           <strong>Silk Moth</strong>
           <span>+10 Entomology</span>
         </div>
+        
+        <!-- Custom Vector Bat Specimen Icon -->
         <div class="specimen-item" onclick="collectSpecimen('Bat')">
-          <i class="fa-solid fa-bat"></i>
-          <strong>Bat</strong>
+          <svg viewBox="0 0 24 24"><path d="M12,2 C10,4 8,4 6,5 C4,6 2,8 2,11 C2,14 4,16 7,16 C9,16 11,14 12,13 C13,14 15,16 17,16 C20,16 22,14 22,11 C22,8 20,6 18,5 C16,4 14,4 12,2 Z M8,8 C9,8 9.5,9 9.5,10 C9.5,11 9,11.5 8,11.5 C7,11.5 6.5,11 6.5,10 C6.5,9 7,8 8,8 Z M16,8 C17,8 17.5,9 17.5,10 C17.5,11 17,11.5 16,11.5 C15,11.5 14.5,11 14.5,10 C14.5,9 15,8 16,8 Z"/></svg>
+          <strong>Vampire Bat</strong>
           <span>+10 Zoology</span>
         </div>
+
         <div class="specimen-item" onclick="collectSpecimen('Spider')">
           <i class="fa-solid fa-spider"></i>
           <strong>Arachnid</strong>
@@ -822,7 +853,7 @@
     <div class="grid-2">
       <div class="game-box">
         <h3 style="font-family: 'Cinzel Decorative', serif; color: var(--crimson); margin-bottom: 0.4rem;">Sally Face & Fran Bow</h3>
-        <p style="font-size: 0.9font-size: 0.9rem; line-height: 1.5; color: var(--text-muted);">
+        <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-muted);">
           Dark storylines, eerie art styles, and psychological mystery. You haven't had the chance to play them all yet, but their atmospheric creepy vibe is 10/10.
         </p>
       </div>
@@ -834,15 +865,20 @@
       </div>
     </div>
 
-    <!-- Section 5: Quiz -->
-    <h2 class="section-title"><i class="fa-solid fa-circle-question"></i> Gwen's Oddities Quiz</h2>
+    <!-- Section 5: Sudden Death Quiz -->
+    <h2 class="section-title"><i class="fa-solid fa-circle-question"></i> Gwen's Oddities Quiz (Sudden Death)</h2>
     <div class="quiz-container">
-      <div class="quiz-question" id="quizQuestion">Which of these cute creatures are strictly NOT allowed in your room?</div>
-      <div class="quiz-options">
-        <button class="quiz-option" onclick="answerQuiz(0)">A) Spiders, Moths & Centipedes</button>
-        <button class="quiz-option" onclick="answerQuiz(1)">B) Bats, Owls & Hedgehogs</button>
-        <button class="quiz-option" onclick="answerQuiz(2)">C) Worms & Slugs</button>
+      <div class="quiz-header">
+        <span id="quizProgress">Question 1 of 5</span>
+        <span id="quizStreak" style="color: var(--crimson);">Streak: 0</span>
       </div>
+
+      <div class="quiz-question" id="quizQuestionText">Which of these cute creatures are strictly NOT allowed in your room?</div>
+      
+      <div class="quiz-options" id="quizOptionsContainer">
+        <!-- Dynamic Options Injected via JS -->
+      </div>
+      
       <div class="quiz-result" id="quizResult"></div>
     </div>
 
@@ -971,7 +1007,192 @@
     animateParticles();
 
     /* -------------------------------------------------------------
-       2. CRT Analog Overlay Toggle
+       2. Bat Swarm Game-Over Transition Engine
+    ------------------------------------------------------------- */
+    const batCanvas = document.getElementById('bat-swarm-canvas');
+    const bCtx = batCanvas.getContext('2d');
+
+    function resizeBatCanvas() {
+      batCanvas.width = window.innerWidth;
+      batCanvas.height = window.innerHeight;
+    }
+    resizeBatCanvas();
+    window.addEventListener('resize', resizeBatCanvas);
+
+    let batSwarmActive = false;
+    let batSwarmBats = [];
+
+    class SwarmBat {
+      constructor() {
+        this.x = -50 - Math.random() * 300;
+        this.y = Math.random() * batCanvas.height;
+        this.size = Math.random() * 18 + 14;
+        this.speedX = Math.random() * 12 + 10;
+        this.speedY = (Math.random() - 0.5) * 4;
+        this.wingPhase = Math.random() * Math.PI * 2;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += Math.sin(this.x * 0.03) * 3 + this.speedY;
+        this.wingPhase += 0.25;
+      }
+
+      draw() {
+        bCtx.save();
+        bCtx.translate(this.x, this.y);
+        bCtx.fillStyle = '#ff1e27';
+        bCtx.shadowColor = '#d71921';
+        bCtx.shadowBlur = 10;
+
+        const s = this.size;
+        const wingY = Math.sin(this.wingPhase) * (s * 0.5);
+
+        bCtx.beginPath();
+        bCtx.moveTo(0, 0);
+        bCtx.quadraticCurveTo(-s * 0.5, -s * 0.5 + wingY, -s, wingY);
+        bCtx.quadraticCurveTo(-s * 0.4, s * 0.3, 0, s * 0.2);
+        bCtx.quadraticCurveTo(s * 0.4, s * 0.3, s, wingY);
+        bCtx.quadraticCurveTo(s * 0.5, -s * 0.5 + wingY, 0, 0);
+        bCtx.fill();
+        bCtx.restore();
+      }
+    }
+
+    function triggerBatSwoopTransition(callback) {
+      batSwarmActive = true;
+      batSwarmBats = [];
+      for (let i = 0; i < 45; i++) {
+        batSwarmBats.push(new SwarmBat());
+      }
+
+      let startTime = Date.now();
+
+      function animateSwarm() {
+        bCtx.clearRect(0, 0, batCanvas.width, batCanvas.height);
+        
+        let allDone = true;
+        batSwarmBats.forEach(b => {
+          b.update();
+          b.draw();
+          if (b.x < batCanvas.width + 100) allDone = false;
+        });
+
+        if (!allDone) {
+          requestAnimationFrame(animateSwarm);
+        } else {
+          bCtx.clearRect(0, 0, batCanvas.width, batCanvas.height);
+          batSwarmActive = false;
+        }
+      }
+
+      animateSwarm();
+      setTimeout(callback, 400); // Reset quiz mid-swoop
+    }
+
+    /* -------------------------------------------------------------
+       3. Sudden Death Multi-Question Quiz Engine
+    ------------------------------------------------------------- */
+    const quizData = [
+      {
+        question: "1. Which of these creatures are strictly NOT allowed in your room?",
+        options: [
+          "Spiders, Moths & Centipedes",
+          "Bats, Owls & Hedgehogs",
+          "Worms & Slugs"
+        ],
+        correct: 2
+      },
+      {
+        question: "2. Which movie officially restarted your childhood DVD collection?",
+        options: [
+          "Scream 4",
+          "Saw I",
+          "Donnie Darko"
+        ],
+        correct: 0
+      },
+      {
+        question: "3. What show did you find in your parents' old DVD stash that made you scream?",
+        options: [
+          "Happy Tree Friends",
+          "Bludgeoning Angel Dokuro-chan",
+          "Death Note"
+        ],
+        correct: 0
+      },
+      {
+        question: "4. What specific emblem do you always draw on your art and assignments?",
+        options: [
+          "A Vampire Bat",
+          "A Rose Signature",
+          "A Shinigami Apple"
+        ],
+        correct: 1
+      },
+      {
+        question: "5. Why do you like the color deep red so much?",
+        options: [
+          "It reminds you of blood and gore aesthetic",
+          "It's just random",
+          "Because of Yuri from DDLC"
+        ],
+        correct: 0
+      }
+    ];
+
+    let currentQuizIdx = 0;
+
+    function renderQuizQuestion() {
+      const q = quizData[currentQuizIdx];
+      document.getElementById('quizProgress').innerText = `Question ${currentQuizIdx + 1} of ${quizData.length}`;
+      document.getElementById('quizStreak').innerText = `Streak: ${currentQuizIdx}`;
+      document.getElementById('quizQuestionText').innerText = q.question;
+      
+      const container = document.getElementById('quizOptionsContainer');
+      container.innerHTML = '';
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-option';
+        btn.innerText = `${String.fromCharCode(65 + idx)}) ${opt}`;
+        btn.onclick = () => selectQuizAnswer(idx);
+        container.appendChild(btn);
+      });
+
+      const res = document.getElementById('quizResult');
+      res.style.display = 'none';
+    }
+
+    function selectQuizAnswer(selectedIdx) {
+      const q = quizData[currentQuizIdx];
+      const res = document.getElementById('quizResult');
+      res.style.display = 'block';
+
+      if (selectedIdx === q.correct) {
+        if (currentQuizIdx < quizData.length - 1) {
+          res.innerHTML = '<i class="fa-solid fa-check"></i> Correct! Moving to the next oddity question...';
+          setTimeout(() => {
+            currentQuizIdx++;
+            renderQuizQuestion();
+          }, 800);
+        } else {
+          res.innerHTML = '<i class="fa-solid fa-trophy"></i> PERFECT SCORE! You conquered the Sudden Death Quiz! 🦇🌹';
+          document.getElementById('quizStreak').innerText = `Streak: 5 (MAX)`;
+        }
+      } else {
+        res.innerHTML = '<i class="fa-solid fa-xmark"></i> WRONG ANSWER! The bats are swooping in... Back to Question 1!';
+        triggerBatSwoopTransition(() => {
+          currentQuizIdx = 0;
+          renderQuizQuestion();
+        });
+      }
+    }
+
+    renderQuizQuestion(); // Initial Render
+
+    /* -------------------------------------------------------------
+       4. CRT Analog Overlay Toggle
     ------------------------------------------------------------- */
     const crtOverlay = document.getElementById('crtOverlay');
     const toggleCrtBtn = document.getElementById('toggleCrtBtn');
@@ -989,7 +1210,7 @@
     });
 
     /* -------------------------------------------------------------
-       3. Secret Message Toggle
+       5. Secret Message Toggle
     ------------------------------------------------------------- */
     function toggleSecretMessage() {
       const msg = document.getElementById('secretMsg');
@@ -1001,7 +1222,7 @@
     }
 
     /* -------------------------------------------------------------
-       4. Specimen Collector Game
+       6. Specimen Collector Game
     ------------------------------------------------------------- */
     let specimenScore = 0;
     const countEl = document.getElementById('specimenCount');
@@ -1017,7 +1238,7 @@
     }
 
     /* -------------------------------------------------------------
-       5. Random Morbid Fact Generator
+       7. Random Morbid Fact Generator
     ------------------------------------------------------------- */
     const facts = [
       "Human bones are constantly remodeling themselves, replacing full bone tissue roughly every 10 years!",
@@ -1034,7 +1255,7 @@
     }
 
     /* -------------------------------------------------------------
-       6. Porcelain Chime Sound Effect
+       8. Porcelain Chime Sound Effect
     ------------------------------------------------------------- */
     function triggerMusicBox() {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1055,20 +1276,7 @@
     }
 
     /* -------------------------------------------------------------
-       7. Interactive Quiz
-    ------------------------------------------------------------- */
-    function answerQuiz(index) {
-      const result = document.getElementById('quizResult');
-      result.style.display = 'block';
-      if (index === 2) {
-        result.innerHTML = '<i class="fa-solid fa-check"></i> Correct! Worms and slugs are deathly scary. Moths, bats, and spiders are awesome though!';
-      } else {
-        result.innerHTML = '<i class="fa-solid fa-xmark"></i> Nope! Moths, bats, spiders & centipedes are super cute. Worms and slugs are the scary ones!';
-      }
-    }
-
-    /* -------------------------------------------------------------
-       8. Anti-Yuri Modal Functions
+       9. Anti-Yuri Modal Functions
     ------------------------------------------------------------- */
     function openModal() {
       document.getElementById('yuriModal').classList.add('active');
