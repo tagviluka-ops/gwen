@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gwen's Crimson Cabinet of Curiosities</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Creepster&family=Plus+Jakarta+Sans:wght@300;400;600;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        crimson: '#8b0000',
+                        blood: '#dc143c',
+                        darkBg: '#080608',
+                        cardBg: '#120a10',
+                        roseAccent: '#ffb7c5',
+                        gothicGold: '#d4af37'
+                    },
+                    fontFamily: {
+                        gothic: ['UnifrakturMaguntia', 'serif'],
+                        cinzel: ['Cinzel Decorative', 'serif'],
+                        creepy: ['Creepster', 'cursive'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080608;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #8b0000;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #dc143c;
+        }
+
+        /* 3D Flip Card Styles */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* Analog Horror Glitch & CRT Overlay */
+        .crt-overlay {
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.25) 50%
+            ), linear-gradient(
+                90deg,
+                rgba(255, 0, 0, 0.03),
+                rgba(0, 255, 0, 0.01),
+                rgba(0, 0, 255, 0.03)
+            );
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.97; }
+            50% { opacity: 1; }
+            52% { opacity: 0.92; }
+            54% { opacity: 1; }
+            80% { opacity: 0.96; }
+            100% { opacity: 0.99; }
+        }
+
+        .crt-active {
+            animation: flicker 0.15s infinite;
+        }
+
+        /* Floating particles canvas container */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Gothic border accents */
+        .gothic-border {
+            border: 2px solid #8b0000;
+            box-shadow: 0 0 15px rgba(139, 0, 0, 0.4), inset 0 0 15px rgba(139, 0, 0, 0.2);
+        }
+
+        .gothic-border-glow:hover {
+            box-shadow: 0 0 25px rgba(220, 20, 60, 0.7), inset 0 0 20px rgba(220, 20, 60, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-gray-200 font-sans min-h-screen relative overflow-x-hidden selection:bg-crimson selection:text-white">
+
+    <!-- Floating Canvas Background for Moths, Bats & Roses -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- CRT Analog Horror Effect Overlay -->
+    <div id="crt-layer" class="crt-overlay fixed inset-0 z-50 crt-active transition-opacity duration-500 opacity-100"></div>
+
+    <!-- Top Navigation Bar -->
+    <nav class="sticky top-0 z-40 bg-darkBg/90 backdrop-blur-md border-b border-crimson/50 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-skull text-blood text-xl animate-pulse"></i>
+                <span class="font-gothic text-xl text-roseAccent tracking-wide">Gwen & Luka</span>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <!-- Analog Horror Static Toggle -->
+                <button id="toggle-crt" onclick="toggleCRT()" class="text-xs sm:text-sm px-3 py-1.5 rounded-full border border-blood/60 bg-crimson/20 hover:bg-crimson/50 text-roseAccent flex items-center gap-2 transition-all shadow-md">
+                    <i class="fa-solid fa-tv text-blood" id="crt-icon"></i>
+                    <span id="crt-text">Analog Horror: ON</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="max-w-6xl mx-auto px-4 py-8 space-y-16 relative z-20">
+
+        <!-- HERO SECTION -->
+        <section class="text-center py-12 relative gothic-border bg-cardBg/80 rounded-2xl p-6 sm:p-10 backdrop-blur-sm overflow-hidden">
+            <div class="absolute -top-12 -left-12 text-crimson/10 text-9xl font-gothic pointer-events-none select-none">G</div>
+            <div class="absolute -bottom-12 -right-12 text-crimson/10 text-9xl font-gothic pointer-events-none select-none">L</div>
+
+            <div class="inline-block p-2 px-4 rounded-full bg-crimson/20 border border-blood/40 text-roseAccent text-xs uppercase tracking-widest mb-4">
+                <i class="fa-solid fa-heart-pulse mr-1 text-blood"></i> Built specially for my wife
+            </div>
+
+            <h1 class="font-cinzel text-3xl sm:text-5xl md:text-6xl text-blood font-bold tracking-wider mb-4 drop-shadow-[0_2px_10px_rgba(139,0,0,0.8)]">
+                GWEN'S CRIMSON CABINET
+            </h1>
+            <p class="font-gothic text-xl sm:text-2xl text-roseAccent mb-6">
+                Of Curiosities, Macabre Treasures & Cute Little Things 🌹
+            </p>
+
+            <div class="max-w-2xl mx-auto bg-darkBg/60 p-4 sm:p-6 rounded-xl border border-crimson/30 text-gray-300 text-sm sm:text-base leading-relaxed space-y-3">
+                <p>
+                    Hey my gorgeous girl! Welcome to your very own personal aesthetic shrine. I collected all of your favorite movies, weirdly adorable creatures, macabre passions, and inside jokes right here.
+                </p>
+                <p class="text-xs sm:text-sm text-roseAccent font-semibold">
+                    Click through the DVD shelf, explore your specimen collection, play with the toggles, and enjoy this spot made just for you! 🖤
+                </p>
+            </div>
+
+            <div class="mt-8 flex justify-center gap-4 text-crimson text-2xl">
+                <i class="fa-solid fa-spider hover:text-roseAccent transition-colors cursor-pointer"></i>
+                <i class="fa-solid fa-bat hover:text-roseAccent transition-colors cursor-pointer"></i>
+                <i class="fa-solid fa-rose hover:text-roseAccent transition-colors cursor-pointer"></i>
+                <i class="fa-solid fa-bone hover:text-roseAccent transition-colors cursor-pointer"></i>
+                <i class="fa-solid fa-ghost hover:text-roseAccent transition-colors cursor-pointer"></i>
+            </div>
+        </section>
+
+        <!-- DVD SHELF SECTION (INTERACTIVE 3D FLIP CARDS) -->
+        <section class="space-y-6">
+            <div class="flex items-center gap-3 border-b border-crimson/40 pb-3">
+                <i class="fa-solid fa-compact-disc text-blood text-2xl"></i>
+                <h2 class="font-cinzel text-2xl sm:text-3xl text-roseAccent">The Digital DVD Shelf</h2>
+                <span class="text-xs text-gray-400 ml-auto hidden sm:block">(Click cards to flip for custom notes!)</span>
+            </div>
+
+            <p class="text-sm text-gray-400">
+                A collection inspired by your DVD display shelf, original horror classics, favorite shows & things on your watchlist!
+            </p>
+
+            <!-- Grid of Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <!-- Saw DVD -->
+                <div class="perspective-1000 h-80 cursor-pointer group" onclick="flipCard(this)">
+                    <div class="transform-style-3d relative w-full h-full rounded-xl gothic-border bg-cardBg transition-all duration-500">
+                        <!-- Front -->
+                        <div class="absolute inset-0 backface-hidden p-5 flex flex-col justify-between rounded-xl bg-gradient-to-b from-darkBg via-cardBg to-crimson/30">
+                            <div class="flex justify-between items-start">
+                                <span class="bg-blood/20 text-roseAccent text-xs px-2 py-1 rounded border border-blood/40 font-mono">DVD #1 FAV</span>
+                                <i class="fa-solid fa-rotate text-xs text-gray-400 group-hover:text-blood"></i>
+                            </div>
+                            <div class="text-center my-auto">
+                                <div class="text-5xl mb-3">🧩</div>
+                                <h3 class="font-gothic text-3xl text-blood">SAW I & II</h3>
+                                <p class="text-xs text-gray-400 mt-2">"Awesome franchise on display"</p>
+                            </div>
+                            <div class="text-xs text-center text-roseAccent font-semibold">Click to flip card 🩸</div>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 backface-hidden rotate-y-180 p-5 flex flex-col justify-between rounded-xl bg-crimson/20 border border-blood">
+                            <h4 class="font-cinzel text-blood font-bold text-lg border-b border-blood/30 pb-1">Note from Luka:</h4>
+                            <p class="text-xs sm:text-sm text-gray-200 leading-relaxed italic my-auto">
+                                "I know how much you love the original Saw DVD on display! We definitely need to make time for a full horror marathon soon so you can watch Saw 2!"
+                            </p>
+                            <span class="text-xs text-roseAccent font-mono text-right">~ Luka ❤️</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scream 4 DVD -->
+                <div class="perspective-1000 h-80 cursor-pointer group" onclick="flipCard(this)">
+                    <div class="transform-style-3d relative w-full h-full rounded-xl gothic-border bg-cardBg transition-all duration-500">
+                        <!-- Front -->
+                        <div class="absolute inset-0 backface-hidden p-5 flex flex-col justify-between rounded-xl bg-gradient-to-b from-darkBg via-cardBg to-crimson/30">
+                            <div class="flex justify-between items-start">
+                                <span class="bg-blood/20 text-roseAccent text-xs px-2 py-1 rounded border border-blood/40 font-mono">1st Collection DVD</span>
+                                <i class="fa-solid fa-rotate text-xs text-gray-400 group-hover:text-blood"></i>
+                            </div>
+                            <div class="text-center my-auto">
+                                <div class="text-5xl mb-3">🔪</div>
+                                <h3 class="font-gothic text-3xl text-blood">SCREAM 4</h3>
+                                <p class="text-xs text-gray-400 mt-2">"The movie that started the collection"</p>
+                            </div>
+                            <div class="text-xs text-center text-roseAccent font-semibold">Click to flip card 🩸</div>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 backface-hidden rotate-y-180 p-5 flex flex-col justify-between rounded-xl bg-crimson/20 border border-blood">
+                            <h4 class="font-cinzel text-blood font-bold text-lg border-b border-blood/30 pb-1">Note from Luka:</h4>
+                            <p class="text-xs sm:text-sm text-gray-200 leading-relaxed italic my-auto">
+                                "It's so cool that Scream 4 was the first DVD you got when you started collecting again! Ghostface approves of your peak taste."
+                            </p>
+                            <span class="text-xs text-roseAccent font-mono text-right">~ Luka ❤️</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Happy Tree Friends DVD -->
+                <div class="perspective-1000 h-80 cursor-pointer group" onclick="flipCard(this)">
+                    <div class="transform-style-3d relative w-full h-full rounded-xl gothic-border bg-cardBg transition-all duration-500">
+                        <!-- Front -->
+                        <div class="absolute inset-0 backface-hidden p-5 flex flex-col justify-between rounded-xl bg-gradient-to-b from-darkBg via-cardBg to-crimson/30">
+                            <div class="flex justify-between items-start">
+                                <span class="bg-blood/20 text-roseAccent text-xs px-2 py-1 rounded border border-blood/40 font-mono">Parents' DVD Cache</span>
+                                <i class="fa-solid fa-rotate text-xs text-gray-400 group-hover:text-blood"></i>
+                            </div>
+                            <div class="text-center my-auto">
+                                <div class="text-5xl mb-3">🐰🪓</div>
+                                <h3 class="font-gothic text-2xl text-blood">HAPPY TREE FRIENDS</h3>
+                                <p class="text-xs text-gray-400 mt-2">Flaky, Flippy, Nutty & Cuddles!</p>
+                            </div>
+                            <div class="text-xs text-center text-roseAccent font-semibold">Click to flip card 🩸</div>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 backface-hidden rotate-y-180 p-5 flex flex-col justify-between rounded-xl bg-crimson/20 border border-blood">
+                            <h4 class="font-cinzel text-blood font-bold text-lg border-b border-blood/30 pb-1">Note from Luka:</h4>
+                            <p class="text-xs sm:text-sm text-gray-200 leading-relaxed italic my-auto">
+                                "Finding this in your parents' DVD stash and screaming is hilarious! It's cute and absurdly gory all at once—just like your vibe!"
+                            </p>
+                            <span class="text-xs text-roseAccent font-mono text-right">~ Luka ❤️</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Death Note DVD -->
+                <div class="perspective-1000 h-80 cursor-pointer group" onclick="flipCard(this)">
+                    <div class="transform-style-3d relative w-full h-full rounded-xl gothic-border bg-cardBg transition-all duration-500">
+                        <!-- Front -->
+                        <div class="absolute inset-0 backface-hidden p-5 flex flex-col justify-between rounded-xl bg-gradient-to-b from-darkBg via-cardBg to-crimson/30">
+                            <div class="flex justify-between items-start">
+                                <span class="bg-blood/20 text-roseAccent text-xs px-2 py-1 rounded border border-blood/40 font-mono">Favorite Anime</span>
+                                <i class="fa-solid fa-rotate text-xs text-gray-400 group-hover:text-blood"></i>
+                            </div>
+                            <div class="text-center my-auto">
+                                <div class="text-5xl mb-3">🍎📓</div>
+                                <h3 class="font-gothic text-3xl text-blood">DEATH NOTE</h3>
+                                <p class="text-xs text-gray-400 mt-2">Shinigami & Apples</p>
+                            </div>
+                            <div class="text-xs text-center text-roseAccent font-semibold">Click to flip card 🩸</div>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 backface-hidden rotate-y-180 p-5 flex flex-col justify-between rounded-xl bg-crimson/20 border border-blood">
+                            <h4 class="font-cinzel text-blood font-bold text-lg border-b border-blood/30 pb-1">Note from Luka:</h4>
+                            <p class="text-xs sm:text-sm text-gray-200 leading-relaxed italic my-auto">
+                                "If you had a Death Note, the only name going in it would be Yuri's. Absolute iconic behavior!"
+                            </p>
+                            <span class="text-xs text-roseAccent font-mono text-right">~ Luka ❤️</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Watchlist: Donnie Darko & Chainsaw Man -->
+                <div class="perspective-1000 h-80 cursor-pointer group" onclick="flipCard(this)">
+                    <div class="transform-style-3d relative w-full h-full rounded-xl gothic-border bg-cardBg transition-all duration-500">
+                        <!-- Front -->
+                        <div class="absolute inset-0 backface-hidden p-5 flex flex-col justify-between rounded-xl bg-gradient-to-b from-darkBg via-cardBg to-crimson/30">
+                            <div class="flex justify-between items-start">
+                                <span class="bg-blood/20 text-roseAccent text-xs px-2 py-1 rounded border border-blood/40 font-mono">Watchlist #1</span>
+                                <i class="fa-solid fa-rotate text-xs text-gray-400 group-hover:text-blood"></i>
+                            </div>
+                            <div class="text-center my-auto">
+                                <div class="text-5xl mb-3">🐰⏳</div>
+                                <h3 class="font-gothic text-2xl text-blood">DONNIE DARKO</h3>
+                                <p class="text-xs text-gray-400 mt-2">& Chainsaw Man</p>
+                            </div>
+                            <div class="text-xs text-center text-roseAccent font-semibold">Click to flip card 🩸</div>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 backface-hidden rotate-y-180 p-5 flex flex-col justify-between rounded-xl bg-crimson/20 border border-blood">
+                            <h4 class="font-cinzel text-blood font-bold text-lg border-b border-blood/30 pb-1">Note from Luka:</h4>
+                            <p class="text-xs sm:text-sm text-gray-200 leading-relaxed italic my-auto">
+                                "You said you never had time to finish Donnie Darko or Chainsaw Man, so I'm officially declaring our next cozy movie night is dedicated to them!"
+                            </p>
+                            <span class="text-xs text-roseAccent font-mono text-right">~ Luka ❤️</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dexter & Dokuro-Chan -->
+                <div class="perspective-1000 h-80 cursor-pointer group" onclick="flipCard(this)">
+                    <div class="transform-style-3d relative w-full h-full rounded-xl gothic-border bg-cardBg transition-all duration-500">
+                        <!-- Front -->
+                        <div class="absolute inset-0 backface-hidden p-5 flex flex-col justify-between rounded-xl bg-gradient-to-b from-darkBg via-cardBg to-crimson/30">
+                            <div class="flex justify-between items-start">
+                                <span class="bg-blood/20 text-roseAccent text-xs px-2 py-1 rounded border border-blood/40 font-mono">Currently Watching</span>
+                                <i class="fa-solid fa-rotate text-xs text-gray-400 group-hover:text-blood"></i>
+                            </div>
+                            <div class="text-center my-auto">
+                                <div class="text-5xl mb-3">💉😇</div>
+                                <h3 class="font-gothic text-2xl text-blood">DEXTER & DOKURO-CHAN</h3>
+                                <p class="text-xs text-gray-400 mt-2">Bludgeoning Angel aesthetic</p>
+                            </div>
+                            <div class="text-xs text-center text-roseAccent font-semibold">Click to flip card 🩸</div>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 backface-hidden rotate-y-180 p-5 flex flex-col justify-between rounded-xl bg-crimson/20 border border-blood">
+                            <h4 class="font-cinzel text-blood font-bold text-lg border-b border-blood/30 pb-1">Note from Luka:</h4>
+                            <p class="text-xs sm:text-sm text-gray-200 leading-relaxed italic my-auto">
+                                "Your love for Dexter fits right in with your mortician & taxidermist aspirations! Dokuro-chan is top tier unhinged anime too."
+                            </p>
+                            <span class="text-xs text-roseAccent font-mono text-right">~ Luka ❤️</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rick and Morty & X-Men -->
+                <div class="perspective-1000 h-80 cursor-pointer group" onclick="flipCard(this)">
+                    <div class="transform-style-3d relative w-full h-full rounded-xl gothic-border bg-cardBg transition-all duration-500">
+                        <!-- Front -->
+                        <div class="absolute inset-0 backface-hidden p-5 flex flex-col justify-between rounded-xl bg-gradient-to-b from-darkBg via-cardBg to-crimson/30">
+                            <div class="flex justify-between items-start">
+                                <span class="bg-blood/20 text-roseAccent text-xs px-2 py-1 rounded border border-blood/40 font-mono">Shows & Comics</span>
+                                <i class="fa-solid fa-rotate text-xs text-gray-400 group-hover:text-blood"></i>
+                            </div>
+                            <div class="text-center my-auto">
+                                <div class="text-5xl mb-3">🧪🧬</div>
+                                <h3 class="font-gothic text-2xl text-blood">RICK & MORTY</h3>
+                                <p class="text-xs text-gray-400 mt-2">+ X-Men & Death Forest</p>
+                            </div>
+                            <div class="text-xs text-center text-roseAccent font-semibold">Click to flip card 🩸</div>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 backface-hidden rotate-y-180 p-5 flex flex-col justify-between rounded-xl bg-crimson/20 border border-blood">
+                            <h4 class="font-cinzel text-blood font-bold text-lg border-b border-blood/30 pb-1">Note from Luka:</h4>
+                            <p class="text-xs sm:text-sm text-gray-200 leading-relaxed italic my-auto">
+                                "Multiverse chaos, mutants, and horror stories. You have the most versatile taste ever."
+                            </p>
+                            <span class="text-xs text-roseAccent font-mono text-right">~ Luka ❤️</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rose Signature Card -->
+                <div class="perspective-1000 h-80 cursor-pointer group" onclick="flipCard(this)">
+                    <div class="transform-style-3d relative w-full h-full rounded-xl gothic-border bg-cardBg transition-all duration-500">
+                        <!-- Front -->
+                        <div class="absolute inset-0 backface-hidden p-5 flex flex-col justify-between rounded-xl bg-gradient-to-b from-darkBg via-cardBg to-crimson/30">
+                            <div class="flex justify-between items-start">
+                                <span class="bg-blood/20 text-roseAccent text-xs px-2 py-1 rounded border border-blood/40 font-mono">Gwen's Art</span>
+                                <i class="fa-solid fa-rotate text-xs text-gray-400 group-hover:text-blood"></i>
+                            </div>
+                            <div class="text-center my-auto">
+                                <div class="text-5xl mb-3 text-blood">🌹</div>
+                                <h3 class="font-gothic text-2xl text-roseAccent">THE ROSE SIGNATURE</h3>
+                                <p class="text-xs text-gray-400 mt-2">Drawn on every art & work</p>
+                            </div>
+                            <div class="text-xs text-center text-roseAccent font-semibold">Click to flip card 🩸</div>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 backface-hidden rotate-y-180 p-5 flex flex-col justify-between rounded-xl bg-crimson/20 border border-blood">
+                            <h4 class="font-cinzel text-blood font-bold text-lg border-b border-blood/30 pb-1">Note from Luka:</h4>
+                            <p class="text-xs sm:text-sm text-gray-200 leading-relaxed italic my-auto">
+                                "You said roses are basic, but the way you draw that one specific rose as your signature is the prettiest thing ever."
+                            </p>
+                            <span class="text-xs text-roseAccent font-mono text-right">~ Luka ❤️</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SPECIMEN & INTEREST VAULT (MACABRE X CUTE CRITTERS) -->
+        <section class="space-y-6">
+            <div class="flex items-center gap-3 border-b border-crimson/40 pb-3">
+                <i class="fa-solid fa-skull-crossbones text-blood text-2xl"></i>
+                <h2 class="font-cinzel text-2xl sm:text-3xl text-roseAccent">The Specimen Vault & Oddities</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Left Cabinet: Future Mortician & Anatomical Interest -->
+                <div class="gothic-border bg-cardBg/90 rounded-2xl p-6 space-y-4">
+                    <div class="flex items-center justify-between border-b border-crimson/30 pb-3">
+                        <h3 class="font-gothic text-2xl text-blood flex items-center gap-2">
+                            <i class="fa-solid fa-vial text-sm"></i> Future Mortician Aspirations
+                        </h3>
+                        <span class="text-xs text-roseAccent border border-blood/40 px-2 py-0.5 rounded font-mono">Bones & Anatomy</span>
+                    </div>
+
+                    <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                        Your fascination with bones, taxidermy, morgues, and the human body is super fascinating! Here are your recorded dream paths:
+                    </p>
+
+                    <ul class="space-y-3 text-xs sm:text-sm">
+                        <li class="flex items-start gap-3 bg-darkBg/60 p-3 rounded-lg border border-crimson/20">
+                            <span class="text-xl">🦴</span>
+                            <div>
+                                <strong class="text-roseAccent block">Taxidermy & Bone Artistry</strong>
+                                <span class="text-gray-400">Wanting to learn more about skeletal structures and taxidermy preserves.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 bg-darkBg/60 p-3 rounded-lg border border-crimson/20">
+                            <span class="text-xl">🩸</span>
+                            <div>
+                                <strong class="text-roseAccent block">Mortician & Corpse Care</strong>
+                                <span class="text-gray-400">Working in morgues or specialized mortuary sciences when older.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 bg-darkBg/60 p-3 rounded-lg border border-crimson/20">
+                            <span class="text-xl">📺</span>
+                            <div>
+                                <strong class="text-roseAccent block">Analog Horror & Liminal Spaces</strong>
+                                <span class="text-gray-400">Loving eerie imagery, uncanny settings, and subtle creepy atmosphere (never suffering though!).</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Right Cabinet: Cute Animals & Critter Index -->
+                <div class="gothic-border bg-cardBg/90 rounded-2xl p-6 space-y-4">
+                    <div class="flex items-center justify-between border-b border-crimson/30 pb-3">
+                        <h3 class="font-gothic text-2xl text-roseAccent flex items-center gap-2">
+                            <i class="fa-solid fa-bug text-sm"></i> Gwen's Favorite Critters
+                        </h3>
+                        <span class="text-xs text-blood border border-blood/40 px-2 py-0.5 rounded font-mono">Approved List</span>
+                    </div>
+
+                    <p class="text-xs sm:text-sm text-gray-300">
+                        You said they are all so ridiculously cute! Here is the official roster of creatures you love:
+                    </p>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        <div class="bg-darkBg/80 p-3 rounded-xl border border-crimson/30 text-center hover:border-blood transition-all">
+                            <div class="text-2xl mb-1">🦋</div>
+                            <div class="font-semibold text-roseAccent text-xs">Moths</div>
+                        </div>
+                        <div class="bg-darkBg/80 p-3 rounded-xl border border-crimson/30 text-center hover:border-blood transition-all">
+                            <div class="text-2xl mb-1">🦇</div>
+                            <div class="font-semibold text-roseAccent text-xs">Bats</div>
+                        </div>
+                        <div class="bg-darkBg/80 p-3 rounded-xl border border-crimson/30 text-center hover:border-blood transition-all">
+                            <div class="text-2xl mb-1">🦉</div>
+                            <div class="font-semibold text-roseAccent text-xs">Owls</div>
+                        </div>
+                        <div class="bg-darkBg/80 p-3 rounded-xl border border-crimson/30 text-center hover:border-blood transition-all">
+                            <div class="text-2xl mb-1">🕷️</div>
+                            <div class="font-semibold text-roseAccent text-xs">Spiders</div>
+                        </div>
+                        <div class="bg-darkBg/80 p-3 rounded-xl border border-crimson/30 text-center hover:border-blood transition-all">
+                            <div class="text-2xl mb-1">🦔</div>
+                            <div class="font-semibold text-roseAccent text-xs">Hedgehogs</div>
+                        </div>
+                        <div class="bg-darkBg/80 p-3 rounded-xl border border-crimson/30 text-center hover:border-blood transition-all">
+                            <div class="text-2xl mb-1">🐐</div>
+                            <div class="font-semibold text-roseAccent text-xs">Goats</div>
+                        </div>
+                        <div class="bg-darkBg/80 p-3 rounded-xl border border-crimson/30 text-center hover:border-blood transition-all">
+                            <div class="text-2xl mb-1">🐱</div>
+                            <div class="font-semibold text-roseAccent text-xs">Cats</div>
+                        </div>
+                        <div class="bg-darkBg/80 p-3 rounded-xl border border-crimson/30 text-center hover:border-blood transition-all">
+                            <div class="text-2xl mb-1">🦌</div>
+                            <div class="font-semibold text-roseAccent text-xs">Deers</div>
+                        </div>
+                        <div class="bg-darkBg/80 p-3 rounded-xl border border-crimson/30 text-center hover:border-blood transition-all">
+                            <div class="text-2xl mb-1">🐛</div>
+                            <div class="font-semibold text-roseAccent text-xs">Millipedes</div>
+                        </div>
+                    </div>
+
+                    <!-- Ban Warning box -->
+                    <div class="mt-4 p-3 rounded-xl bg-crimson/20 border border-blood/60 flex items-center gap-3">
+                        <span class="text-2xl">🪱🚫</span>
+                        <div class="text-xs">
+                            <strong class="text-blood uppercase tracking-wide block">Banned Creatures Zone:</strong>
+                            <span class="text-gray-300">Worms & Slugs are strictly prohibited from this website!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- "BROKE NO MORE" INDIE GAME ARCADE -->
+        <section class="space-y-6">
+            <div class="flex items-center gap-3 border-b border-crimson/40 pb-3">
+                <i class="fa-solid fa-gamepad text-blood text-2xl"></i>
+                <h2 class="font-cinzel text-2xl sm:text-3xl text-roseAccent">The "Broke-No-More" Indie Arcade</h2>
+            </div>
+            
+            <p class="text-sm text-gray-400">
+                You said you haven't been able to play these because you were broke—so here is your future gaming wishlist!
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Sally Face Card -->
+                <div class="gothic-border bg-cardBg p-5 rounded-2xl hover:-translate-y-1 transition-all">
+                    <div class="h-32 rounded-xl bg-gradient-to-tr from-blue-950 via-darkBg to-crimson/40 flex items-center justify-center border border-blue-900/40 mb-4">
+                        <div class="text-center">
+                            <span class="text-4xl">🎸🟦</span>
+                            <h3 class="font-gothic text-2xl text-blue-300 mt-2">Sally Face</h3>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-300 mb-4">
+                        Prosthetic mask, dark mysteries, metal music, and ghost hunting in Addison Apartments.
+                    </p>
+                    <div class="text-xs font-mono text-roseAccent bg-darkBg p-2 rounded border border-crimson/20">
+                        Status: Reserved for Gwen 🎮
+                    </div>
+                </div>
+
+                <!-- Fran Bow Card -->
+                <div class="gothic-border bg-cardBg p-5 rounded-2xl hover:-translate-y-1 transition-all">
+                    <div class="h-32 rounded-xl bg-gradient-to-tr from-emerald-950 via-darkBg to-crimson/40 flex items-center justify-center border border-emerald-900/40 mb-4">
+                        <div class="text-center">
+                            <span class="text-4xl">🐱💊</span>
+                            <h3 class="font-gothic text-2xl text-emerald-300 mt-2">Fran Bow</h3>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-300 mb-4">
+                        Creepy psychological horror with Mr. Midnight, red pills, and parallel terrifying worlds.
+                    </p>
+                    <div class="text-xs font-mono text-roseAccent bg-darkBg p-2 rounded border border-crimson/20">
+                        Status: Reserved for Gwen 🐈‍⬛
+                    </div>
+                </div>
+
+                <!-- FNAF Card -->
+                <div class="gothic-border bg-cardBg p-5 rounded-2xl hover:-translate-y-1 transition-all">
+                    <div class="h-32 rounded-xl bg-gradient-to-tr from-amber-950 via-darkBg to-crimson/40 flex items-center justify-center border border-amber-900/40 mb-4">
+                        <div class="text-center">
+                            <span class="text-4xl">🐻🍕</span>
+                            <h3 class="font-gothic text-2xl text-amber-300 mt-2">FNAF</h3>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-300 mb-4">
+                        Five Nights at Freddy's. Animatronic jumpscares and endless deep lore for horror fans.
+                    </p>
+                    <div class="text-xs font-mono text-roseAccent bg-darkBg p-2 rounded border border-crimson/20">
+                        Status: Night Shift Ready 🍕
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ANTI-YURI ANTI-FAN CLUB EASTER EGG -->
+        <section class="gothic-border bg-gradient-to-r from-crimson/30 via-cardBg to-darkBg p-6 rounded-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-ban text-blood text-3xl"></i>
+                    <div>
+                        <h2 class="font-gothic text-2xl text-blood">Official Yuri Hate Zone</h2>
+                        <p class="text-xs text-roseAccent">"I fucking hate her sm bro" — Gwen</p>
+                    </div>
+                </div>
+                <button onclick="smashYuri()" class="px-4 py-2 rounded-xl bg-blood hover:bg-crimson text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg active:scale-95">
+                    Delete Yuri 🔨
+                </button>
+            </div>
+
+            <div class="bg-darkBg/90 p-4 rounded-xl border border-blood/30 flex items-center justify-between">
+                <div class="text-xs sm:text-sm text-gray-300">
+                    Yuri Hater Counter: <span id="yuri-count" class="font-mono text-roseAccent text-lg font-bold">100% HATED</span>
+                </div>
+                <div id="yuri-status" class="text-xs text-emerald-400 font-mono">
+                    Status: Banished from literature club
+                </div>
+            </div>
+        </section>
+
+        <!-- MEMORY & PHOTO VAULT -->
+        <section class="space-y-6">
+            <div class="flex items-center gap-3 border-b border-crimson/40 pb-3">
+                <i class="fa-solid fa-heart text-blood text-2xl"></i>
+                <h2 class="font-cinzel text-2xl sm:text-3xl text-roseAccent">Our Memory Vault</h2>
+            </div>
+
+            <p class="text-sm text-gray-400">
+                A framed space for our photos! Replace these placeholders anytime with our pictures.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                
+                <!-- Frame 1 -->
+                <div class="gothic-border bg-cardBg p-4 rounded-2xl space-y-3 group hover:border-blood transition-all">
+                    <div class="aspect-square bg-darkBg rounded-xl overflow-hidden border border-crimson/30 flex flex-col items-center justify-center relative">
+                        <img src="https://placehold.co/600x600/120a10/ffb7c5?text=Drop+Our+Photo+1" alt="Luka and Gwen" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x600/120a10/ffb7c5?text=Drop+Our+Photo+1'">
+                        <div class="absolute bottom-2 right-2 bg-darkBg/80 px-2 py-1 rounded text-xs text-roseAccent font-mono">🌹</div>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="font-gothic text-lg text-blood">Cutest Couple</h4>
+                        <p class="text-xs text-gray-400">"Not as cute as you though"</p>
+                    </div>
+                </div>
+
+                <!-- Frame 2 -->
+                <div class="gothic-border bg-cardBg p-4 rounded-2xl space-y-3 group hover:border-blood transition-all">
+                    <div class="aspect-square bg-darkBg rounded-xl overflow-hidden border border-crimson/30 flex flex-col items-center justify-center relative">
+                        <img src="https://placehold.co/600x600/120a10/ffb7c5?text=Drop+Our+Photo+2" alt="Luka and Gwen" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x600/120a10/ffb7c5?text=Drop+Our+Photo+2'">
+                        <div class="absolute bottom-2 right-2 bg-darkBg/80 px-2 py-1 rounded text-xs text-roseAccent font-mono">🦇</div>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="font-gothic text-lg text-blood">My Wife Forever</h4>
+                        <p class="text-xs text-gray-400">Goth partner in crime</p>
+                    </div>
+                </div>
+
+                <!-- Frame 3 -->
+                <div class="gothic-border bg-cardBg p-4 rounded-2xl space-y-3 group hover:border-blood transition-all sm:col-span-2 md:col-span-1">
+                    <div class="aspect-square bg-darkBg rounded-xl overflow-hidden border border-crimson/30 flex flex-col items-center justify-center relative">
+                        <img src="https://placehold.co/600x600/120a10/ffb7c5?text=Drop+Our+Photo+3" alt="Luka and Gwen" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x600/120a10/ffb7c5?text=Drop+Our+Photo+3'">
+                        <div class="absolute bottom-2 right-2 bg-darkBg/80 px-2 py-1 rounded text-xs text-roseAccent font-mono">🩸</div>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="font-gothic text-lg text-blood">Movie Nights</h4>
+                        <p class="text-xs text-gray-400">Saw & Scream horror marathons</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-crimson/40 bg-darkBg py-8 text-center text-xs text-gray-500 relative z-20 space-y-2">
+        <p class="font-gothic text-base text-roseAccent">Made with endless love by Luka for Gwen 🖤</p>
+        <p>Color Palette: Crimson Red, Blood Red, Pitch Black & Rose Pink</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. CARD FLIP LOGIC ---
+        function flipCard(cardWrapper) {
+            const innerCard = cardWrapper.querySelector('.transform-style-3d');
+            innerCard.classList.toggle('rotate-y-180');
+        }
+
+        // --- 2. CRT ANALOG HORROR TOGGLE ---
+        let crtEnabled = true;
+        function toggleCRT() {
+            const crtLayer = document.getElementById('crt-layer');
+            const crtText = document.getElementById('crt-text');
+            const crtIcon = document.getElementById('crt-icon');
+
+            crtEnabled = !crtEnabled;
+            if (crtEnabled) {
+                crtLayer.classList.remove('opacity-0');
+                crtLayer.classList.add('opacity-100', 'crt-active');
+                crtText.innerText = "Analog Horror: ON";
+                crtIcon.className = "fa-solid fa-tv text-blood";
+            } else {
+                crtLayer.classList.remove('opacity-100', 'crt-active');
+                crtLayer.classList.add('opacity-0');
+                crtText.innerText = "Analog Horror: OFF";
+                crtIcon.className = "fa-solid fa-tv text-gray-500";
+            }
+        }
+
+        // --- 3. ANTI-YURI EASTER EGG ---
+        let smashCount = 0;
+        function smashYuri() {
+            smashCount++;
+            const status = document.getElementById('yuri-status');
+            const count = document.getElementById('yuri-count');
+            
+            const comments = [
+                "Yuri erased from literature club!",
+                "Monika backed you up on this one!",
+                "Yuri has been officially banished!",
+                "Gwen's anti-Yuri blast activated x" + smashCount
+            ];
+            
+            count.innerText = "YURI DELETED " + smashCount + " TIMES";
+            status.innerText = comments[smashCount % comments.length];
+        }
+
+        // --- 4. PARTICLES CANVAS (Moths, Bats & Floating Rose Petals) ---
+        window.onload = function () {
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            // Particles Array
+            const particleTypes = ['🌹', '🦇', '🦋', '✨'];
+            const particles = [];
+            const particleCount = 25;
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 14 + 10,
+                    symbol: particleTypes[Math.floor(Math.random() * particleTypes.length)],
+                    speedX: (Math.random() - 0.5) * 0.8,
+                    speedY: Math.random() * 0.8 + 0.3,
+                    opacity: Math.random() * 0.6 + 0.2
+                });
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, width, height);
+
+                particles.forEach(p => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+
+                    if (p.y > height) {
+                        p.y = -20;
+                        p.x = Math.random() * width;
+                    }
+                    if (p.x > width) p.x = 0;
+                    if (p.x < 0) p.x = width;
+
+                    ctx.globalAlpha = p.opacity;
+                    ctx.font = `${p.size}px serif`;
+                    ctx.fillText(p.symbol, p.x, p.y);
+                });
+
+                requestAnimationFrame(animateParticles);
+            }
+
+            animateParticles();
+        };
+    </script>
+</body>
+</html>
